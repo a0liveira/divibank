@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    autopilot.gke.io/resource-adjustment: '{"input":{"containers":[{}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"}}]},"modified":true}'
+    deployment.kubernetes.io/revision: "10"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"front-client","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"front-client"}},"template":{"metadata":{"labels":{"app":"front-client"}},"spec":{"containers":[{"image":"gcr.io/divibank-staging/front-client:v1.0.0","name":"front-client","ports":[{"containerPort":80,"name":"default"}]}]}}}}
+    kubernetes.io/change-cause: kubectl set image deployment/front-client front-client=gcr.io/divibank-staging/front-client:v1.0.2
+      --record=true
+  creationTimestamp: "2021-07-19T19:39:32Z"
+  generation: 10
+  name: front-client
+  resourceVersion: "23899998"
+  uid: dbb00d40-a62b-4d73-8eeb-b9d04f467d30
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: front-client
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: front-client
+    spec:
+      containers:
+      - image: gcr.io/divibank-staging/front-client:v1.0.7
+        imagePullPolicy: IfNotPresent
+        name: front-client
+        ports:
+        - containerPort: 80
+          name: default
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+        securityContext:
+          capabilities:
+            drop:
+            - NET_RAW
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-08-19T12:45:07Z"
+    lastUpdateTime: "2021-08-19T12:45:07Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2021-07-19T19:39:32Z"
+    lastUpdateTime: "2021-08-19T12:45:07Z"
+    message: ReplicaSet "front-client-9668bb45c" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 10
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    autopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"name":"divibank-accounts"}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"divibank-accounts"}]},"modified":true}'
+    deployment.kubernetes.io/revision: "2"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"divibank-accounts","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"divibank-accounts"}},"template":{"metadata":{"labels":{"app":"divibank-accounts"}},"spec":{"containers":[{"env":[{"name":"ASPNETCORE_ENVIRONMENT","value":"Staging"}],"image":"gcr.io/divibank-staging/divibank-accounts:v1.0.0","name":"divibank-accounts","ports":[{"containerPort":80,"name":"default-http"},{"containerPort":443,"name":"default-https"}]}]}}}}
+    kubernetes.io/change-cause: kubectl set image deployment/divibank-accounts divibank-accounts=gcr.io/divibank-staging/divibank-accounts:v1.0.1
+      --record=true
+  creationTimestamp: "2021-08-10T09:31:28Z"
+  generation: 2
+  name: divibank-accounts
+  resourceVersion: "23127294"
+  uid: ae5c9e9f-6978-4de5-be27-c219742a5af5
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: divibank-accounts
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: divibank-accounts
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Staging
+        image: gcr.io/divibank-staging/divibank-accounts:v1.0.1
+        imagePullPolicy: IfNotPresent
+        name: divibank-accounts
+        ports:
+        - containerPort: 80
+          name: default-http
+          protocol: TCP
+        - containerPort: 443
+          name: default-https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+        securityContext:
+          capabilities:
+            drop:
+            - NET_RAW
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-08-10T09:31:28Z"
+    lastUpdateTime: "2021-08-11T15:40:30Z"
+    message: ReplicaSet "divibank-accounts-6fdd59f6d5" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2021-08-18T12:18:48Z"
+    lastUpdateTime: "2021-08-18T12:18:48Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

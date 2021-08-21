@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    autopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"name":"admin"}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"admin"}]},"modified":true}'
+    deployment.kubernetes.io/revision: "7"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"admin","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"admin"}},"template":{"metadata":{"labels":{"app":"admin"}},"spec":{"containers":[{"env":[{"name":"ASPNETCORE_ENVIRONMENT","value":"Development"}],"image":"gcr.io/divibank-staging/admin:v1.0.4","name":"admin","ports":[{"containerPort":80,"name":"default-http"},{"containerPort":443,"name":"default-https"}]}]}}}}
+    kubernetes.io/change-cause: kubectl set image deployment/admin admin=gcr.io/divibank-staging/admin:v1.0.5
+      --record=true
+  creationTimestamp: "2021-08-06T17:40:44Z"
+  generation: 7
+  name: admin
+  resourceVersion: "23204567"
+  uid: ad2c55b8-8b69-4f8a-a413-0140875b1c58
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: admin
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: admin
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        image: gcr.io/divibank-staging/admin:V1.0.9
+        imagePullPolicy: IfNotPresent
+        name: admin
+        ports:
+        - containerPort: 80
+          name: default-http
+          protocol: TCP
+        - containerPort: 443
+          name: default-https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 2Gi
+        securityContext:
+          capabilities:
+            drop:
+            - NET_RAW
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-08-18T14:41:58Z"
+    lastUpdateTime: "2021-08-18T14:41:58Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2021-08-06T17:40:44Z"
+    lastUpdateTime: "2021-08-18T14:41:58Z"
+    message: ReplicaSet "admin-99db7699c" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 7
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

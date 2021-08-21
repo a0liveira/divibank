@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  name: divibank-accounts-sas
+spec:
+  ports:
+  - name: default-http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: default-https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: divibank-accounts
+  sessionAffinity: None
+  type: ClusterIP

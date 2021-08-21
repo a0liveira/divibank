@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  name: front-backoffice-sas
+spec:
+  ports:
+  - name: default
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: front-backoffice
+  sessionAffinity: None
+  type: NodePort
